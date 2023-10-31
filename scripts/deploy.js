@@ -7,8 +7,12 @@ async function main() {
 
   const VotingSystem = await ethers.getContractFactory("VotingSystem");
   const votingSystem = await VotingSystem.deploy(["CandidateA", "CandidateB"]);
+  const contractAddress = await votingSystem.getAddress();
 
-  console.log("VotingSystem deployed to:", await votingSystem.getAddress());
+  // This is needed in the votingSystem.js
+  process.env.ContractAddress = contractAddress;
+
+  console.log("VotingSystem deployed to:", contractAddress);
 }
 
 main()

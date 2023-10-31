@@ -5,6 +5,7 @@ contract VotingSystem {
     address public admin;
     bool public votingStarted;
     uint256 public winningCandidateId;
+    address[] public voters;
 
     struct Candidate {
         string name;
@@ -56,12 +57,14 @@ contract VotingSystem {
         require(candidateId < candidates.length, "Invalid candidate ID");
         candidates[candidateId].votes++;
         hasVoted[msg.sender] = true;
+        voters.push(msg.sender);
     }
 
     function endVoting() public onlyAdmin {
         require(votingStarted, "Voting has not started yet");
-        votingStarted = false;
         winningCandidateId = findWinningCandidate();
+
+        resetVotingState();
     }
 
     function findWinningCandidate() internal view returns (uint256) {
@@ -89,5 +92,14 @@ contract VotingSystem {
 
     function getWinner() public view returns (string memory) {
         return candidates[winningCandidateId].name;
+    }
+
+    function resetVotingState() internal {
+        votingStarted = false;
+
+        for (uint256 i = 0; i < voters.length; i++) {
+            delete hasVoted[voters[i]];
+        }
+        delete voters;
     }
 }

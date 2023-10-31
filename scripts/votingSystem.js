@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 const ethers = hre.ethers;
 
-const contractAddress = "0x0B306BF915C4d645ff596e518fAf3F9669b97016";
+const contractAddress = process.env.ContractAddress;
 const contractAbi = require("../artifacts/contracts/VotingSystem.sol/VotingSystem.json").abi;
 
 
@@ -36,10 +36,10 @@ async function main() {
     console.log('Voting started');
 
     // accountA vote
-    const accountATx = await contract.connect(accountA).vote(1);
+    const accountATx = await contract.connect(accountA).vote(0);
     await accountATx.wait();
     // accountB vote
-    const accountBTx = await contract.connect(accountB).vote(2);
+    const accountBTx = await contract.connect(accountB).vote(1);
     await accountBTx.wait();
     // accountA vote
     const accountCTx = await contract.connect(accountC).vote(1);
